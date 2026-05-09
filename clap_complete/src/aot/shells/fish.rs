@@ -66,7 +66,7 @@ fn escape_help(help: &builder::StyledStr) -> String {
 }
 
 fn escape_name(name: &str) -> String {
-    name.replace('-', "_")
+    name.replace('\\', "\\\\").replace('-', "_")
 }
 
 fn gen_fish_inner(
@@ -91,7 +91,8 @@ fn gen_fish_inner(
     //      -n "{needs_fn_name}"            # complete for command "myprog"
     //      -n "{using_fn_name} subcmd1"    # complete for command "myprog subcmd1"
 
-    let mut basic_template = format!("complete -c {root_command}");
+    let escaped_root_command = root_command.replace('\\', "\\\\");
+    let mut basic_template = format!("complete -c {escaped_root_command}");
 
     if parent_commands.is_empty() {
         if cmd.has_subcommands() {
